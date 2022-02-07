@@ -1,0 +1,57 @@
+{
+    "scans": "scans.mzdb",
+    "ion_series": [
+        "b",
+        "y",
+        "nB",
+        "nY"
+    ],
+    "diff_mods": [
+        {
+            "residues": "M",
+            "symbol": "*",
+            "mass": 15.994915,
+            "n-term": false,
+            "c-term": false
+        },
+        {
+            "residues": "STY",
+            "symbol": "#",
+            "mass": 79.96633,
+            "n-term": false,
+            "c-term": false
+        }
+    ],
+    "static_mods": [
+        {
+            "residue": "C",
+            "mass": 57.021464,
+            "n-term": false
+        }
+    ],
+    "neutral_loss": {
+        "mass": -97.9769,
+        "residues": "ST"
+    },
+    "peak_depth": 0,
+    "max_peak_depth": 50,
+    "tolerance": 0.3,
+    "units": "Da",
+    "window": 70,
+    "max_diff": 5,
+    "low_mass_cutoff": true,
+    "deisotope_type": "",
+    "filter_low_intensity": 0,
+    "no_cterm": true,
+    "use_mob_score": true,
+    "use_delta_ascore": true,
+    "symbol": "#",
+    "residues": "STY",
+    "out": "out.tsv",
+    "peptides": "",
+    "max_peptides": 1000,
+    "mz": 0,
+    "peptide": "",
+    "scan": 0,
+    "peptides_file": "peptides.csv"
+}
