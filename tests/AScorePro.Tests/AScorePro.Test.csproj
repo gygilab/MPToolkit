@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AScore\AScore.csproj" />
+    <ProjectReference Include="..\..\src\AScorePro\AScorePro.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
   </ItemGroup>
 

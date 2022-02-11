@@ -31,7 +31,7 @@ namespace MPToolkit.AScore
                 peptidesPath = options.PeptidesPath;
             }
 
-            string scansPath = options.ScansPath;
+            string scansPath = ascoreOptions.Scans;
             if (!string.IsNullOrEmpty(options.ScansPath))
             {
                 scansPath = options.ScansPath;
