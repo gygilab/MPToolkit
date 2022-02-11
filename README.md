@@ -140,7 +140,7 @@ Summary
 
 # Peptides file format
 
-The peptides file should contain a list of peptides to score, on per row, formatted as tab-delimited values.  It should contain the following columns
+The peptides file should contain a list of peptides to score, on per row, formatted as tab-delimited values.  Runtime depends on the number of input peptides, but AScorePro can process thousands of entries per minute on commodity hardware. The ptpdies file should contain the following columns:
 
 - The peptide ID. Can be any value and is copied to the output.
 - The scan number.  This should be the scan number in the input file where the peptide was identified.
