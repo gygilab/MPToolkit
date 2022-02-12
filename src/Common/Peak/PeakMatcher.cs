@@ -14,7 +14,7 @@ namespace MPToolkit.Common.Peak
         {
             int i = NearestIndex(scan.Centroids, targetMz);
 
-            int count = scan.PeakCount;
+            int count = scan.Centroids.Count;
             bool foundNext = false;
             double errorNext = 0;
             if (i < count)

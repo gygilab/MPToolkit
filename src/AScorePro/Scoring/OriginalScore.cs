@@ -1,5 +1,6 @@
 
 using MPToolkit.Common.Data;
+using MPToolkit.Common.Data.Filter;
 using MPToolkit.Common.Scoring;
 using MPToolkit.Common.Sequence;
 using System.Collections.Generic;
@@ -36,12 +37,12 @@ namespace MPToolkit.AScore.Scoring
             }
 
             // Generate spectra at each peak depth.
-            var filter = new TopIonsFilter();
+            var filter = new TopIonsFilter(maxPeakDepth, options.Window);
             var scans = new Dictionary<int, Scan>();
             for (int depth = minPeakDepth; depth <= maxPeakDepth; ++depth)
             {
                 Scan s = (Scan)scan.Clone();
-                filter.Filter(s, depth, options.Window);
+                filter.Filter(s);
                 scans.Add(depth, s);
             }
 

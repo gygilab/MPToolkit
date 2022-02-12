@@ -1,5 +1,6 @@
 
 using MPToolkit.Common.Data;
+using MPToolkit.Common.Data.Filter;
 using MPToolkit.Common.Sequence;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -132,6 +133,15 @@ namespace MPToolkit.AScore
         public bool LowMassCutoff { get; set; }
 
         /// <summary>
+        /// Scans are filtered to remove this fraction
+        /// of its lowest intensity peaks.
+        /// </summary>
+        [JsonPropertyName("filter_low_intensity")]
+        public double FilterLowIntensity { get; set; } = 0.25;
+
+        public Deisotoping DeisotopingType { get; set; }
+
+        /// <summary>
         /// When enabled. Modifications on the c-terminus
         /// of the peptide are not considered.
         /// </summary>
@@ -223,6 +233,8 @@ namespace MPToolkit.AScore
             Units = other.Units;
             Window = other.Window;
             LowMassCutoff = other.LowMassCutoff;
+            FilterLowIntensity = other.FilterLowIntensity;
+            DeisotopingType = other.DeisotopingType;
             NoCterm = other.NoCterm;
             UseMobScore = other.UseMobScore;
             UseDeltaAscore = other.UseDeltaAscore;

@@ -3,6 +3,7 @@ using MPToolkit.AScore.Scoring;
 using MPToolkit.Common.Scoring;
 using MPToolkit.Common.Sequence;
 using MPToolkit.Common.Data;
+using MPToolkit.Common.Data.Filter;
 using System.Collections.Generic;
 using System;
 
@@ -38,27 +39,24 @@ namespace MPToolkit.AScore
                 Symbol = Options.Symbol,
                 Residues = Options.Residues
             };
+
             Scan scan = inputScan.Clone();
-
-            var generator = new PeptideGenerator(peptide, targetMod);
-
             scan.Precursors[0].Mz = peptide.PrecursorMz;
-            var filter = new TopIonsFilter();
-            filter.Filter(scan, Options.MaxPeakDepth, Options.Window);
-
+            int fragmentChargeMax = Math.Min(2, scan.Precursors[0].Charge - 1);
+            double maxMz = scan.EndMz;
             double minMz = scan.StartMz;
             if (Options.LowMassCutoff)
             {
                 minMz = Math.Max(minMz, 0.28 * peptide.PrecursorMz);
             }
 
-            double maxMz = scan.EndMz;
-            int fragmentChargeMax = Math.Min(2, scan.Precursors[0].Charge);
-
-            var scoring = ScoringFactory.Get(Options);
+            PreProcessScan(scan);
 
             // Score each peptide
             var peptides = new List<Peptide>();
+            var scoring = ScoringFactory.Get(Options);
+            // TODO: Set neutral Loss moss
+            var generator = new PeptideGenerator(peptide, targetMod);
             for (; !generator.AtEnd() && peptides.Count < Options.MaxPeptides; generator.Next())
             {
                 var ions = generator.GetMassList(Options.IonSeries, fragmentChargeMax, minMz, maxMz);
@@ -123,8 +121,9 @@ namespace MPToolkit.AScore
                     siteOutput.Score = siteScoring.Score(currentPeptide, siteIons, scan, output);
                     siteOutput.Peptides.Add(currentPeptide.Clone());
                     siteOutput.SiteIons.Add(new List<Centroid>(siteIons));
-                    
-                    if (Options.UseDeltaAscore) {
+
+                    if (Options.UseDeltaAscore)
+                    {
                         // Flip order and get the score difference.
                         var siteIons2 = SiteIons.Filter(nextIons, ions);
                         siteOutput.Score -= siteScoring.Score(peptide, siteIons2, scan, output);
@@ -144,5 +143,26 @@ namespace MPToolkit.AScore
             output.Sites = sites;
             return output;
         }
+
+        private void PreProcessScan(Scan scan)
+        {
+            if (Options.DeisotopingType == Deisotoping.MatchOffset) {
+                (new MatchDeisotoper(Options.Tolerance, Options.Units)).Filter(scan);
+            }
+            else if (Options.DeisotopingType == Deisotoping.Top1Per1) {
+                (new TopIonsFilter(1, 1)).Filter(scan);
+            }
+            var filters = new List<IScanFilter>() {
+                new IntensityFilter(Options.FilterLowIntensity),
+                new WaterLossFilter(Options.Tolerance, Options.Units),
+                new NeutralLossFilter(Options.Tolerance, Options.Units),
+                new TopIonsFilter(Options.MaxPeakDepth, Options.Window)
+            };
+            foreach (var filter in filters)
+            {
+                filter.Filter(scan);
+            }
+        }
     }
+
 }

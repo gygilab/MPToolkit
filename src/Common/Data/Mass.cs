@@ -46,11 +46,15 @@ namespace MPToolkit.Common.Data
 
         public const double Electron = 0.000548579867;
 
+        public const double Neutron = 1.00286864;
+
         public const double Nitrogen = 14.0030740052;
 
         public const double Carbon = 12.0000000;
 
         public const double Oxygen = 15.9949146221;
+
+        public const double Water = 18.010564686;
 
         /// <summary>
         /// Mass difference between isotopes of peptides when

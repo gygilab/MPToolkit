@@ -1,16 +1,28 @@
 
 using System.Collections.Generic;
 
-namespace MPToolkit.Common.Data
+namespace MPToolkit.Common.Data.Filter
 {
     /// <summary>
-    /// This filter separates the scan into several m/z windows and
-    /// within each window ranks the peaks by intensity.  Peaks ranking below
-    /// the input peak depth are then removed.
+    /// Filters for top ions per m/z window.
     /// </summary>
-    public class TopIonsFilter
+    public class TopIonsFilter : IScanFilter
     {
-        public void Filter(Scan scan, int depth, double window)
+        private int Depth;
+
+        private double Window;
+
+        public TopIonsFilter(int depth, double window) {
+            Depth = depth;
+            Window = window;
+        }
+
+        /// <summary>
+        /// This filter separates the scan into several m/z windows and
+        /// within each window ranks the peaks by intensity.  Peaks ranking below
+        /// the input peak depth are then removed.
+        /// </summary>
+        public void Filter(Scan scan)
         {
             List<Centroid> peaks = scan.Centroids;
             if (peaks.Count == 0)
@@ -21,8 +33,8 @@ namespace MPToolkit.Common.Data
             // Rank peaks in each window based on intensity.
             int start = 0;
             int i = 0;
-            double currentWindowMin = System.Math.Floor(peaks[start].Mz / window) * window;
-            double currentWindowMax = currentWindowMin + window;
+            double currentWindowMin = System.Math.Floor(peaks[start].Mz / Window) * Window;
+            double currentWindowMax = currentWindowMin + Window;
             while (true)
             {
                 if (i == peaks.Count || peaks[i].Mz > currentWindowMax)
@@ -50,8 +62,8 @@ namespace MPToolkit.Common.Data
                     }
 
                     start = i;
-                    currentWindowMin = System.Math.Floor(peaks[start].Mz / window) * window;
-                    currentWindowMax = currentWindowMin + window;
+                    currentWindowMin = System.Math.Floor(peaks[start].Mz / Window) * Window;
+                    currentWindowMax = currentWindowMin + Window;
                 }
                 ++i;
             }
@@ -63,7 +75,7 @@ namespace MPToolkit.Common.Data
             var newPeaks = new List<Centroid>(peaks.Count);
             foreach (var peak in peaks)
             {
-                if (peak.Rank <= depth)
+                if (peak.Rank <= Depth)
                 {
                     newPeaks.Add(peak);
                 }
