@@ -21,8 +21,8 @@ jobs:
       working-directory: ./src/AScorePro
       run: dotnet restore
     - name: Test
-      working-directory: ./src/AScorePro
-      run: dotnet test --no-restore --verbosity normal
+      working-directory: ./test/AScorePro.Tests
+      run: dotnet test --verbosity normal
     - name: Build
       working-directory: ./src/AScorePro
       run: dotnet publish -c Release -r win-x64 -o AScorePro
