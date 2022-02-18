@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-using MPToolkit.Common.Math;
-
 namespace MPToolkit.Common.Math
 {
     public class CombinationIteratorTest
