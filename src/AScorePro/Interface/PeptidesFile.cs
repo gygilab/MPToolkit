@@ -58,6 +58,11 @@ namespace MPToolkit.AScore.Interface
                     continue;
                 }
 
+                if (line.Contains("\tpeptide\t")) {
+                    // header line
+                    continue;
+                }
+
                 yield return ParsePeptide(line.Trim());
             }
         }
