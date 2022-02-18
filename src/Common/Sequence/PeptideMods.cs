@@ -39,9 +39,11 @@ namespace MPToolkit.Common.Sequence
 
         public IEnumerator<PeptideMod> GetEnumerator()
         {
-            foreach (var modList in Mods)
+            var positions = new List<int> (Mods.Keys);
+            positions.Sort();
+            foreach (var pos in positions)
             {
-                foreach (var mod in modList.Value)
+                foreach (var mod in Mods[pos])
                 {
                     yield return mod;
                 }
