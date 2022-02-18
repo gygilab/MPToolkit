@@ -160,15 +160,14 @@ namespace MPToolkit.Common.Sequence
             string sequence = BasePeptide.Sequence;
 
             // Keep track of positions that can produce neutral loss fragments.
-            var posCanNL = new List<bool>(ModMasses.Count);
-            for (int i = 0; i < sequence.Length; ++i)
+            var posCanNL = new List<bool>(new bool[ModMasses.Count]);
+            foreach (int pos in Combinations[Index])
             {
-                posCanNL.Add(false);
                 for (int j = 0; UseNeutralLoss && j < NeutralLossResidues.Length; ++j)
                 {
-                    if (sequence[i] == NeutralLossResidues[j])
+                    if (sequence[pos] == NeutralLossResidues[j])
                     {
-                        posCanNL[i] = true;
+                        posCanNL[pos] = true;
                         break;
                     }
                 }
