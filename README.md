@@ -21,11 +21,13 @@ The package has been tested on the following operating systems:
 
 ### AScorePro
 
+A prebuilt windows application for AScorePro is available for download via GitHub Releases.
+
 ## Building
 
 project files can be built with the .NET CLI
 
-Example: (Linux)
+Example: (Linux/macOS)
 ```
 cd src/AScorePro
 dotnet build
@@ -42,12 +44,15 @@ AScorePro should compile within a few seconds.
 AScorePro requires an options file in json format.  The path is passed in using the -j option on the command line.
 
 Example:
+Linux/macOS:
+`./AScorePro -j options.json`
 
-`./AScore -j options.json`
+Windows:
+`AScorePro.exe -j options.json`
 
 You may also pass in the scans file with -s and the peptides file with -p.  These override the selection in the options file.
 
-`./AScore -j options.json -s scans.mzXML -p peptides.tsv`
+`AScorePro.exe -j options.json -s scans.mzXML -p peptides.tsv`
 
 Spectrum file formats with the following extensions are accepted:
 
