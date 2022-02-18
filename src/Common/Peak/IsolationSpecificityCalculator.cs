@@ -28,7 +28,7 @@ namespace MPToolkit.Common.Peak {
                 // if the peak is within 20 ppm of any isotope
                 bool isPrecursor = false;
                 for (int j = -6; j < 7; ++j) {
-                    double theoreticalMass = precursorMz + (j * (Mass.AVERAGINE_DIFF / charge));
+                    double theoreticalMass = precursorMz + (j * (Mass.AveragineDifference / charge));
                     if (System.Math.Abs(PeakMatcher.getPpm(theoreticalMass, peak.Mz)) < 20) {
                         isPrecursor = true;
                         break;

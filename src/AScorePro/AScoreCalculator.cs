@@ -55,8 +55,7 @@ namespace MPToolkit.AScore
             // Score each peptide
             var peptides = new List<Peptide>();
             var scoring = ScoringFactory.Get(Options);
-            // TODO: Set neutral Loss moss
-            var generator = new PeptideGenerator(peptide, targetMod);
+            var generator = new PeptideGenerator(peptide, targetMod, Options.Masses);
             for (; !generator.AtEnd() && peptides.Count < Options.MaxPeptides; generator.Next())
             {
                 var ions = generator.GetMassList(Options.IonSeries, fragmentChargeMax, minMz, maxMz);

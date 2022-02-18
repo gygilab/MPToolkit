@@ -217,6 +217,11 @@ namespace MPToolkit.AScore
         public string PeptidesFile { get; set; }
 
         /// <summary>
+        /// Instace of amino acid masses with static mods applied.
+        /// </summary>
+        public AminoAcidMasses Masses = new AminoAcidMasses();
+
+        /// <summary>
         /// Copy Constructor
         /// </summary>
         /// <param name="other">The instance to copy.</param>
@@ -246,6 +251,7 @@ namespace MPToolkit.AScore
             Peptide = other.Peptide;
             Scan = other.Scan;
             PeptidesFile = other.PeptidesFile;
+            Masses = other.Masses.Clone();
         }
 
         /// <summary>

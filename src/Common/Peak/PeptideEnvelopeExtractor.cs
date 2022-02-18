@@ -24,7 +24,7 @@ namespace MPToolkit.Common.Peak
             {
                 for (int i = 0; i < numIsotopes; ++i)
                 {
-                    double matchMz = targetMz + (((i + left) * Mass.AVERAGINE_DIFF) / charge);
+                    double matchMz = targetMz + (((i + left) * Mass.AveragineDifference) / charge);
                     int index = PeakMatcher.Match(scan, matchMz, 3, PeakMatcher.PPM);
                     if (index >= 0)
                     {

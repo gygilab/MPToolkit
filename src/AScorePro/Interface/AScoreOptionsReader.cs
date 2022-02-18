@@ -41,6 +41,20 @@ namespace MPToolkit.AScore.Interface {
             foreach (string series in options.IonSeriesList) {
                 options.IonSeries += ionSeriesOptions[series];
             }
+
+            foreach (var mod in options.StaticMods) {
+                if (!string.IsNullOrEmpty(mod.Residues)) {
+                    foreach (char c in mod.Residues) {
+                        options.Masses.ModifyAminoAcidMass(c, mod.Mass);
+                    }
+                }
+                if (mod.IsNTerm) {
+                    options.Masses.ModifyNTermMass(mod.Mass);
+                }
+                if (mod.IsCTerm) {
+                    options.Masses.ModifyCTermMass(mod.Mass);
+                }
+            }
             return options;
         }
     }

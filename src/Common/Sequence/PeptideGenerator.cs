@@ -46,12 +46,15 @@ namespace MPToolkit.Common.Sequence
         /// </summary>
         private int MaxPeptides = 1000;
 
+        private AminoAcidMasses Masses;
+
         private PeptideMod TargetMod;
 
-        public PeptideGenerator(Peptide peptide, PeptideMod targetMod)
+        public PeptideGenerator(Peptide peptide, PeptideMod targetMod, AminoAcidMasses aaMasses)
         {
             BasePeptide = peptide.Clone();
             TargetMod = targetMod;
+            Masses = aaMasses.Clone();
             Init();
         }
 
@@ -99,9 +102,11 @@ namespace MPToolkit.Common.Sequence
             for (int i = 0; i < sequence.Length; ++i)
             {
                 char aa = sequence[i];
-                ModMasses.Add(Mass.GetAminoAcidMass(aa));
+                ModMasses.Add(Masses.GetAminoAcidMass(aa));
 
             }
+            ModMasses[0] += Masses.GetNTermMass();
+            ModMasses[ModMasses.Count - 1] += Masses.GetCTermMass();
             foreach (var mod in BasePeptide.Mods)
             {
                 ModMasses[mod.Position] += mod.Mass;
