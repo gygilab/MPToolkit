@@ -38,7 +38,7 @@ namespace MPToolkit.AScore.Scoring
             }
 
             var matches = matchPeaks(ions, peaks);
-            var matchesByPeakDepth = new List<int>(maxPeakDepth + 1);
+            var matchesByPeakDepth = new List<int>(new int[maxPeakDepth + 1]);
             foreach (var match in matches)
             {
                 int obsIndex = match.Value;
@@ -52,6 +52,7 @@ namespace MPToolkit.AScore.Scoring
 
             peptide.IonsTotal = ions.Count;
             peptide.IonsMatched = matches.Count;
+            peptide.Matches = new List<PeakMatch>();
             foreach (var match in matches)
             {
                 peptide.Matches.Add(new PeakMatch() {
@@ -89,7 +90,7 @@ namespace MPToolkit.AScore.Scoring
             {
                 throw new InvalidOperationException("no trials");
             }
-            return Binomial.CDF(p, trials, successes);
+            return Binomial.CDF(1 - p, trials, trials - successes);
         }
 
         public Dictionary<int, int> matchPeaks(List<Centroid> theo, List<Centroid> obs)
