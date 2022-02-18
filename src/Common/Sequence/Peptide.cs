@@ -89,7 +89,9 @@ namespace MPToolkit.Common.Sequence
 
         public Peptide Clone()
         {
-            return (Peptide)MemberwiseClone();
+            var output = (Peptide)MemberwiseClone();
+            output.Mods = output.Mods.Clone();
+            return output;
         }
 
         /// <summary>

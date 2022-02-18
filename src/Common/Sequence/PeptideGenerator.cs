@@ -285,6 +285,7 @@ namespace MPToolkit.Common.Sequence
         public Peptide GetPeptide()
         {
             Peptide output = BasePeptide.Clone();
+            output.AnnotatedSequence = "";
             output.GeneratorIndex = Index;
             for (int i = Combinations[Index].Count - 1; i >= 0; --i)
             {
