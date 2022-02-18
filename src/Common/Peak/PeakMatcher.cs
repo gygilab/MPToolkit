@@ -145,7 +145,7 @@ namespace MPToolkit.Common.Peak
             }
 
             lowMz = mass - tolerance;
-            highMz = mass - tolerance;
+            highMz = mass + tolerance;
         }
 
         public static double getPpm(double theoretical, double observed)
