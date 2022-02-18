@@ -47,11 +47,11 @@
     "use_delta_ascore": true,
     "symbol": "#",
     "residues": "STY",
-    "out": "out.tsv",
+    "out": "output.tsv",
     "peptides": "",
     "max_peptides": 1000,
     "mz": 0,
     "peptide": "",
     "scan": 0,
-    "peptides_file": "peptides.csv"
+    "peptides_file": "peptides.tsv"
 }

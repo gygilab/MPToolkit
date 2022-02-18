@@ -39,27 +39,27 @@ AScorePro should compile within a few seconds.
 
 ## Options
 
-AScorePro requires a parameter file in json format.  The path is passed in using the -j option on the command line.
+AScorePro requires an options file in json format.  The path is passed in using the -j option on the command line.
 
 Example:
 
-`./AScore -j parameters.json`
+`./AScore -j options.json`
 
-You may also pass in the scans file with -s and the peptides file with -p.  These override the selection in the parameter file.
+You may also pass in the scans file with -s and the peptides file with -p.  These override the selection in the options file.
 
-`./AScore -j parameters.json -s scans.mzML -p peptides.tsv`
+`./AScore -j options.json -s scans.mzXML -p peptides.tsv`
 
-Spectrum file formats are accepted with the following extensions:
+Spectrum file formats with the following extensions are accepted:
 
 - .RAW
 - .mzXML
 - .mzML
 
-# Parameter file
+# Options file
 
-The contents of the parameter file must be valid json format
+The contents of the options file must be valid json format
 
-Example parameter file:
+Example file:
 
 ```
 {
@@ -140,11 +140,12 @@ Summary
 
 # Peptides file format
 
-The peptides file should contain a list of peptides to score, on per row, formatted as tab-delimited values.  Runtime depends on the number of input peptides, but AScorePro can process thousands of entries per minute on commodity hardware. The ptpdies file should contain the following columns:
+The peptides file should contain a list of peptides to score, on per row, formatted as tab-delimited values.  Runtime depends on the number of input peptides, but AScorePro can process thousands of entries per minute on commodity hardware. The peptides file should contain the following columns:
 
 - The peptide ID. Can be any value and is copied to the output.
 - The scan number.  This should be the scan number in the input file where the peptide was identified.
-- the annotated peptide sequence with flanking residues.  Mod symbols should be defined in the parameters.
+- The annotated peptide sequence with flanking residues.  Mod symbols should be defined in the parameters.
+- The precursor m/z for the peptide
 
 Example:
 
@@ -159,7 +160,7 @@ The output with be a tab-delimited file with the following columns:
 
 - The peptide ID
 - Number of sites scored
-- Number of mod permutations considered
+- Number of peptides or mod permutations considered
 - The top scoring annotated peptide
 - The score of the top peptide
 - Site positions for up to six mods
