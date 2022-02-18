@@ -20,7 +20,7 @@ namespace MPToolkit.AScore.Scoring
             {
                 return a.ToString().Equals(b.ToString()) ? 1 : 0;
             }
-            return a.Score.CompareTo(b.Score);
+            return b.Score.CompareTo(a.Score);
         }
     }
 }
