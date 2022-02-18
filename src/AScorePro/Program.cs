@@ -103,7 +103,7 @@ namespace MPToolkit.AScore
                     writer.Write("\t");
                     writer.Write(topPeptide.ToString());
                     writer.Write("\t");
-                    writer.Write(topPeptide.Score);
+                    writer.Write(topPeptide.Score.ToString("F9"));
                     writer.Write("\t");
                     writer.Write(result.Peptides.Count);
 
@@ -114,7 +114,7 @@ namespace MPToolkit.AScore
                             writer.Write("\t");
                             writer.Write(site.Position);
                             writer.Write("\t");
-                            writer.Write(site.Score);
+                            writer.Write(site.Score.ToString("F9"));
                         }
                         else {
                             writer.Write("\t\\N\t\\N");
