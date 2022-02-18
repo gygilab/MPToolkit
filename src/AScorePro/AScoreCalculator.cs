@@ -37,8 +37,23 @@ namespace MPToolkit.AScore
             var targetMod = new PeptideMod()
             {
                 Symbol = Options.Symbol,
-                Residues = Options.Residues
+                Residues = Options.Residues,
             };
+            foreach (var mod in Options.DiffMods) {
+                if (mod.Symbol == targetMod.Symbol) {
+                    targetMod.Mass = mod.Mass;
+                    break;
+                }
+            }
+
+            output.ModCount = 0;
+            foreach (PeptideMod mod in peptide.Mods)
+            {
+                if (mod.Symbol == targetMod.Symbol)
+                {
+                    ++output.ModCount;
+                }
+            }
 
             Scan scan = inputScan.Clone();
             scan.Precursors[0].Mz = peptide.PrecursorMz;
@@ -56,6 +71,9 @@ namespace MPToolkit.AScore
             var peptides = new List<Peptide>();
             var scoring = ScoringFactory.Get(Options);
             var generator = new PeptideGenerator(peptide, targetMod, Options.Masses);
+            if (Math.Abs(Options.NeutralLoss.Mass) > 0 && !String.IsNullOrEmpty(Options.NeutralLoss.Residues)) {
+                generator.SetNeutralLossMod(Options.NeutralLoss.Mass, Options.NeutralLoss.Residues);
+            }
             for (; !generator.AtEnd() && peptides.Count < Options.MaxPeptides; generator.Next())
             {
                 var ions = generator.GetMassList(Options.IonSeries, fragmentChargeMax, minMz, maxMz);
