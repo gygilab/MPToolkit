@@ -84,6 +84,15 @@ namespace MPToolkit.AScore
             var stream = new FileStream(options.Out, FileMode.Create, FileAccess.Write); 
             using (var writer = new StreamWriter(stream))
             {
+                // Header
+                writer.Write("ID\tModsScored\tPeptidesScored\tPeptide\tScore");
+
+                // Flatten output. Show up to six mods.
+                for (int i = 0; i < 6; ++i) {
+                    writer.Write("\tSitePosition{0}\tSiteScore{0}", i + 1, i + 1);
+                }
+                writer.Write("\n");
+
                 var peptides = new PeptidesFile(options.PeptidesFile);
                 foreach (PeptidesFileEntry entry in peptides)
                 {
@@ -104,8 +113,6 @@ namespace MPToolkit.AScore
                     writer.Write(topPeptide.ToString());
                     writer.Write("\t");
                     writer.Write(topPeptide.Score.ToString("F9"));
-                    writer.Write("\t");
-                    writer.Write(result.Peptides.Count);
 
                     // Flatten output. Show up to six mods.
                     for (int i = 0; i < 6; ++i) {
