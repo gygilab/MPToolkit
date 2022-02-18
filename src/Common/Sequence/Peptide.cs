@@ -70,7 +70,7 @@ namespace MPToolkit.Common.Sequence
         /// <summary>
         /// Stores information from matched peaks.
         /// </summary>
-        public List<PeakMatch> Matches;
+        public List<PeakMatch> Matches = new List<PeakMatch>();
 
         /// <summary>
         /// Stores counts of matches from each peak depth.
