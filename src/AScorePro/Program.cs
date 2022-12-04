@@ -19,40 +19,58 @@ namespace MPToolkit.AScore
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            var parser = new CliOptionsParser();
-            AScoreCliOptions options = parser.Parse(args);
+            try {
+                var parser = new CliOptionsParser();
+                AScoreCliOptions options = parser.Parse(args);
 
-            FileStream stream = File.Open(options.ParametersPath, FileMode.Open, FileAccess.Read);
-            AScoreOptions ascoreOptions = AScoreOptionsReader.Read(stream);
+                FileStream stream = File.Open(options.ParametersPath, FileMode.Open, FileAccess.Read);
+                AScoreOptions ascoreOptions = AScoreOptionsReader.Read(stream);
 
-            string peptidesPath = ascoreOptions.PeptidesFile;
-            if (!string.IsNullOrEmpty(options.PeptidesPath))
-            {
-                peptidesPath = options.PeptidesPath;
+                string peptidesPath = ascoreOptions.PeptidesFile;
+                if (!string.IsNullOrEmpty(options.PeptidesPath))
+                {
+                    peptidesPath = options.PeptidesPath;
+                }
+
+                string scansPath = ascoreOptions.Scans;
+                if (!string.IsNullOrEmpty(options.ScansPath))
+                {
+                    scansPath = options.ScansPath;
+                }
+
+                var reader = ScanReaderFactory.GetReader(scansPath);
+                reader.Open(scansPath, new ScanReaderOptions());
+                var scans = new ScanCache(reader);
+
+                var peptideParser = new PeptideParser(ascoreOptions.DiffMods);
+
+                var aScore = new AScoreCalculator(ascoreOptions);
+                if (!string.IsNullOrEmpty(ascoreOptions.Peptide))
+                {
+                    var peptide = peptideParser.Parse(ascoreOptions.Peptide);
+                    var scan = scans.GetScan(peptide.ScanNumber);
+                    AScoreSingle(aScore, peptide, scan, ascoreOptions);
+                }
+                else
+                {
+                    AScoreMulti(aScore, scans, peptideParser, ascoreOptions);
+                }
             }
-
-            string scansPath = ascoreOptions.Scans;
-            if (!string.IsNullOrEmpty(options.ScansPath))
+            catch (Exception ex)
             {
-                scansPath = options.ScansPath;
-            }
-
-            var reader = ScanReaderFactory.GetReader(scansPath);
-            reader.Open(scansPath, new ScanReaderOptions());
-            var scans = new ScanCache(reader);
-
-            var peptideParser = new PeptideParser(ascoreOptions.DiffMods);
-
-            var aScore = new AScoreCalculator(ascoreOptions);
-            if (!string.IsNullOrEmpty(ascoreOptions.Peptide))
-            {
-                var peptide = peptideParser.Parse(ascoreOptions.Peptide);
-                var scan = scans.GetScan(peptide.ScanNumber);
-                AScoreSingle(aScore, peptide, scan, ascoreOptions);
-            }
-            else
-            {
-                AScoreMulti(aScore, scans, peptideParser, ascoreOptions);
+                if (ex.Message.Length > 0) {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                    try {
+                        using (StreamWriter writer = new StreamWriter("error.log", true)) {
+                            writer.WriteLine("[" + DateTime.Now.ToString() + "]");
+                            writer.WriteLine(ex.Message);
+                            writer.WriteLine(ex.StackTrace);
+                        }
+                    }
+                    catch (Exception) {
+                        // dont throw exception if we cant write to error log
+                    }
+                }
             }
         }
 
