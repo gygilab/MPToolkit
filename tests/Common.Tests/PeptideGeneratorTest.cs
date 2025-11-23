@@ -21,7 +21,7 @@ namespace MPToolkit.Common.Sequence
                 Residues = "STY",
                 Symbol = '@'
             };
-            var generator = new PeptideGenerator(peptide, mod);
+            var generator = new PeptideGenerator(peptide, mod, new AminoAcidMasses());
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace MPToolkit.Common.Sequence
                 Residues = "STY",
                 Symbol = '@'
             };
-            var generator = new PeptideGenerator(peptide, mod);
+            var generator = new PeptideGenerator(peptide, mod, new AminoAcidMasses());
         }
     }
 }
