@@ -50,7 +50,7 @@ namespace MPToolkit.Common.Data.Filter
             }
 
             // Remove 2x water loss
-            targetMz = precursor.Charge - (2 * Mass.Water / precursor.Charge);
+            targetMz = precursor.Mz - (2 * Mass.Water / precursor.Charge);
             while ((i = PeakMatcher.Match(scan, targetMz, Tolerance, (int)Units)) != -1) {
                 scan.Centroids.RemoveAt(i);
             }
