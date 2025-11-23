@@ -12,7 +12,7 @@ namespace MPToolkit.AScore.Interface
         /// Not used in AScore, can be any unique number for
         /// identification purposes.
         /// </summary>
-        public int Id;
+        public string Id;
 
         /// <summary>
         /// The scan number is used to look up the scan from the
@@ -73,7 +73,7 @@ namespace MPToolkit.AScore.Interface
         private PeptidesFileEntry ParsePeptide(string line) {
             var entry = new PeptidesFileEntry();
             string[] pieces = line.Split("\t");
-            entry.Id = int.Parse(pieces[0]);
+            entry.Id = pieces[0];
             entry.ScanNumber = int.Parse(pieces[1]);
             entry.Peptide = pieces[2];
             entry.PrecursorMz = double.Parse(pieces[3]);

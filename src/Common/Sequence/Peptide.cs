@@ -18,7 +18,7 @@ namespace MPToolkit.Common.Sequence
         /// <summary>
         /// A unique number used to identify the peptide.
         /// </summary>
-        public int Id;
+        public string Id;
 
         /// <summary>
         /// The scan number for the peptide

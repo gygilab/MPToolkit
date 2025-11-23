@@ -53,13 +53,15 @@ namespace MPToolkit.AScore
                 }
                 else
                 {
-                    AScoreMulti(aScore, scans, peptideParser, ascoreOptions);
+                    AScoreMulti(aScore, scans, peptideParser, peptidesPath, ascoreOptions);
                 }
             }
             catch (Exception ex)
             {
                 if (ex.Message.Length > 0) {
                     Console.WriteLine("An error occurred: " + ex.Message);
+                    Console.WriteLine("Stack trace:");
+                    Console.WriteLine(ex.StackTrace);
                     try {
                         using (StreamWriter writer = new StreamWriter("error.log", true)) {
                             writer.WriteLine("[" + DateTime.Now.ToString() + "]");
@@ -96,8 +98,9 @@ namespace MPToolkit.AScore
         /// <param name="aScore">Instance of AScore used on all peptides</param>
         /// <param name="scans">Collection of scans</param>
         /// <param name="parser">Unserializes peptides from the text input</param>
+        /// <param name="peptidesPath">Path to peptides file (may override options)</param>
         /// <param name="options">AScore options</param>
-        private static void AScoreMulti(AScoreCalculator aScore, ScanCache scans, PeptideParser parser, AScoreOptions options)
+        private static void AScoreMulti(AScoreCalculator aScore, ScanCache scans, PeptideParser parser, string peptidesPath, AScoreOptions options)
         {
             var stream = new FileStream(options.Out, FileMode.Create, FileAccess.Write); 
             using (var writer = new StreamWriter(stream))
@@ -111,41 +114,48 @@ namespace MPToolkit.AScore
                 }
                 writer.Write("\n");
 
-                var peptides = new PeptidesFile(options.PeptidesFile);
+                var peptides = new PeptidesFile(peptidesPath);
                 foreach (PeptidesFileEntry entry in peptides)
                 {
-                    var peptide = parser.Parse(entry.Peptide);
-                    peptide.PrecursorMz = entry.PrecursorMz;
-                    peptide.Id = entry.Id;
-                    peptide.ScanNumber = entry.ScanNumber;
-                    var scan = scans.GetScan(peptide.ScanNumber);
-                    var result = aScore.Run(peptide, scan);
+                    try
+                    {
+                        var peptide = parser.Parse(entry.Peptide);
+                        peptide.PrecursorMz = entry.PrecursorMz;
+                        peptide.Id = entry.Id;
+                        peptide.ScanNumber = entry.ScanNumber;
+                        var scan = scans.GetScan(peptide.ScanNumber);
+                        var result = aScore.Run(peptide, scan);
 
-                    Peptide topPeptide = result.Peptides[0];
-                    writer.Write(topPeptide.Id);
-                    writer.Write("\t");
-                    writer.Write(result.ModCount);
-                    writer.Write("\t");
-                    writer.Write(result.Peptides.Count);
-                    writer.Write("\t");
-                    writer.Write(topPeptide.ToString());
-                    writer.Write("\t");
-                    writer.Write(topPeptide.Score.ToString("F9"));
+                        Peptide topPeptide = result.Peptides[0];
+                        writer.Write(topPeptide.Id);
+                        writer.Write("\t");
+                        writer.Write(result.ModCount);
+                        writer.Write("\t");
+                        writer.Write(result.Peptides.Count);
+                        writer.Write("\t");
+                        writer.Write(topPeptide.ToString());
+                        writer.Write("\t");
+                        writer.Write(topPeptide.Score.ToString("F9"));
 
-                    // Flatten output. Show up to six mods.
-                    for (int i = 0; i < 6; ++i) {
-                        if (i < result.Sites.Count) {
-                            var site = result.Sites[i];
-                            writer.Write("\t");
-                            writer.Write(site.Position);
-                            writer.Write("\t");
-                            writer.Write(site.Score.ToString("F9"));
+                        // Flatten output. Show up to six mods.
+                        for (int i = 0; i < 6; ++i) {
+                            if (i < result.Sites.Count) {
+                                var site = result.Sites[i];
+                                writer.Write("\t");
+                                writer.Write(site.Position);
+                                writer.Write("\t");
+                                writer.Write(site.Score.ToString("F9"));
+                            }
+                            else {
+                                writer.Write("\t\\N\t\\N");
+                            }
                         }
-                        else {
-                            writer.Write("\t\\N\t\\N");
-                        }
+                        writer.Write("\n");
                     }
-                    writer.Write("\n");
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Skipping peptide {entry.Id} scan {entry.ScanNumber}: {ex.Message}");
+                    }
                 }
             }
         }
